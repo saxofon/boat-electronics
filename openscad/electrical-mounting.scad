@@ -1,17 +1,27 @@
+battery_length = 321;
+battery_width = 152;
+battery_pole_offset_x = 51;
+battery_pole_offset_y = 27;
+
+battery_spacing = 15;
+
+box_wall_thickness = 10;
+box_wall_height= 300;
+
 module victron_smart_battery_200Ah()
 {
     color("lightblue")
-        cube([321,152,228]);
+        cube([battery_length,battery_width,228]);
     translate([8,45,228])
         color("lightblue")
             cube([305,97,9]);
     translate([70,8,228])
         color("lightblue")
             cube([180,37,9]);
-    translate([51,27,228])
+    translate([battery_pole_offset_x,battery_pole_offset_y,228])
         color("red")
             cylinder(9, d=25);
-    translate([271,27,228])
+    translate([battery_length-battery_pole_offset_x,battery_pole_offset_y,228])
         color("black")
             cylinder(9, d=25);
 }
@@ -55,23 +65,23 @@ module bluesea_powerbar_600A()
 module connector_short()
 {
     color("silver")
-        cube([89,30,5]);
+        cube([battery_pole_offset_y*2+15*2+battery_spacing,30,5]);
 }
 module connector_long()
 {
     color("silver")
-        cube([138,30,5]);
+        cube([battery_pole_offset_x*2+15*2+battery_spacing,30,5]);
 }
 
 module string_48VDC()
 {
     victron_smart_battery_200Ah();
-    translate([326,0,0])
+    translate([battery_length+battery_spacing,0,0])
         victron_smart_battery_200Ah();
-    translate([647,-5,0])
+    translate([battery_length*2+battery_spacing,-battery_spacing,0])
         rotate(a=180)
             victron_smart_battery_200Ah();
-    translate([321,-5,0])
+    translate([battery_length,-battery_spacing,0])
         rotate(a=180)
             victron_smart_battery_200Ah();
 }
@@ -79,12 +89,12 @@ module string_48VDC()
 module bank_48VDC()
 {
     string_48VDC();
-    translate([255,12,237])
+    translate([battery_length-battery_pole_offset_x-15,battery_pole_offset_y-15,237])
         connector_long();
-    translate([611,-47,237])
+    translate([battery_length*2+battery_spacing-battery_pole_offset_x+15,-battery_pole_offset_y-battery_spacing-15,237])
         rotate(a=90)
             connector_short();
-    translate([255,-47,237])
+    translate([battery_length-battery_pole_offset_x-15,-battery_pole_offset_y-battery_spacing-15,237])
         connector_long();
         
 }
@@ -92,43 +102,44 @@ module bank_48VDC()
 module box_bottom_lid()
 {
     color("beige")
-        cube([677,339,10]);
+        cube([battery_length*2+battery_spacing*3+box_wall_thickness*2,
+              battery_width*2+battery_spacing*3+box_wall_thickness*2,
+              box_wall_thickness]);
 }
 
 module box_longside()
 {
     color("beige")
-        cube([677,10,250]);
+        cube([battery_length*2+battery_spacing*3+box_wall_thickness*2,box_wall_thickness,box_wall_height]);
 }
 
 module box_shortside()
 {
     color("beige")
-        cube([10,319,250]);
+        cube([box_wall_thickness,battery_width*2+battery_spacing*3,box_wall_height]);
 }
 
 module box()
 {    
-    translate([-15,-172,-10])
-        box_bottom_lid();
-    translate([-15,-172,0])
+    box_bottom_lid();
+    translate([0,0,box_wall_thickness])
         box_longside();
-    translate([-15,157,0])
+    translate([0,battery_width*2+battery_spacing*3+box_wall_thickness,box_wall_thickness])
         box_longside();
-    translate([-15,-162,0])
+    translate([0,box_wall_thickness,box_wall_thickness])
         box_shortside();
-    translate([652,-162,0])
+    translate([battery_length*2+battery_spacing*3+box_wall_thickness,box_wall_thickness,box_wall_thickness])
         box_shortside();
-    translate([-15,-172,250])
-        *box_bottom_lid();
+    translate([0,0,box_wall_height+box_wall_thickness])
+        *#box_bottom_lid();
 }
 
 module battery_box()
 {
     box();
-    bank_48VDC();
+    translate([box_wall_thickness+battery_spacing,box_wall_thickness+battery_spacing+battery_width+battery_spacing,box_wall_thickness])
+        bank_48VDC();
 }
-
 
 module electric_panel()
 {
@@ -149,6 +160,21 @@ module electric_panel()
         victron_multiplus2_48_3000();
 }
 
+module show_system()
+{
 battery_box();
 translate([-140,-184,-10])
     electric_panel();
+}
+
+module print_dimensions()
+{
+    echo("Box bottom LxW", battery_length*2+battery_spacing*3+box_wall_thickness*2, battery_width*2+battery_spacing*3+box_wall_thickness*2);
+    echo("Box longside LxH", battery_length*2+battery_spacing*3+box_wall_thickness*2, box_wall_height);
+    echo("Box shortside LxH", battery_width*2+battery_spacing*3, box_wall_height);
+    echo("Connector short LxW", battery_pole_offset_y*2+15*2+battery_spacing, 30);
+    echo("Connector long LxW", battery_pole_offset_x*2+15*2+battery_spacing, 30);
+}
+
+show_system();
+print_dimensions();
