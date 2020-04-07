@@ -5,7 +5,7 @@ battery_pole_offset_y = 27;
 
 battery_spacing = 15;
 
-box_wall_thickness = 10;
+box_wall_thickness = 8;
 box_wall_height= 300;
 
 module victron_smart_battery_200Ah()
@@ -102,8 +102,8 @@ module bank_48VDC()
 module box_bottom_lid()
 {
     color("beige")
-        cube([battery_length*2+battery_spacing*3+box_wall_thickness*2,
-              battery_width*2+battery_spacing*3+box_wall_thickness*2,
+        cube([battery_length*2+battery_spacing*3,
+              battery_width*2+battery_spacing*3,
               box_wall_thickness]);
 }
 
@@ -121,7 +121,8 @@ module box_shortside()
 
 module box()
 {    
-    box_bottom_lid();
+    translate([box_wall_thickness,box_wall_thickness,0])
+        box_bottom_lid();
     translate([0,0,box_wall_thickness])
         box_longside();
     translate([0,battery_width*2+battery_spacing*3+box_wall_thickness,box_wall_thickness])
@@ -169,7 +170,7 @@ translate([-140,-184,-10])
 
 module print_dimensions()
 {
-    echo("Box bottom LxW", battery_length*2+battery_spacing*3+box_wall_thickness*2, battery_width*2+battery_spacing*3+box_wall_thickness*2);
+    echo("Box bottom LxW", battery_length*2+battery_spacing*3, battery_width*2+battery_spacing*3);
     echo("Box longside LxH", battery_length*2+battery_spacing*3+box_wall_thickness*2, box_wall_height);
     echo("Box shortside LxH", battery_width*2+battery_spacing*3, box_wall_height);
     echo("Connector short LxW", battery_pole_offset_y*2+15*2+battery_spacing, 30);
