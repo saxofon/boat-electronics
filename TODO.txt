@@ -3,3 +3,23 @@
   https://golvvarmebutiken.se/Elektrisk-golvvaerme/Vaermemattor/Varmamattan-Smal.htm
   https://www.granngarden.se/varmematta-nelson-garden-22-x-53-cm/p/1169741
   https://www.kivikangas.fi/varmematta-65-w-40x70-cm-med-termostat-
+
+* charge breaker/fuse panel
+  1. Solarregulator - 20A
+  https://www.elkatalogen.se/produkter/ge-dvargbrytare-g100-b-1p-20a.html
+
+* load breaker/fuse panel
+  1. 48VDC/12VDC charger - 10A
+  2. 48VDC/12VDC converter - 10A
+  3. Aux1 - 10A
+  4. Aux1 - 10A
+  5. Aux1 - 10A
+  6. Aux1 - 10A
+  7. Aux1 - 10A
+  8. Aux1 - 10A
+  9. Aux1 - 10A
+ 10. Aux1 - 10A
+  https://www.elkatalogen.se/produkter/ge-dvargbrytare-g100-b-1p-610.html
+
+* box for charge/load breaker/fuse panel
+  https://www.elkatalogen.se/produkter/hager-norm-1x18-moduler-gd118s-utanpaliggande.html
