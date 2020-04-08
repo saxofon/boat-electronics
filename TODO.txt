@@ -23,3 +23,6 @@
 
 * box for charge/load breaker/fuse panel
   https://www.elkatalogen.se/produkter/hager-norm-1x18-moduler-gd118s-utanpaliggande.html
+
+* solarpanel support
+  1045x1690 mm
