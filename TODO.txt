@@ -1,8 +1,14 @@
 * isolate batterybox
+
 * heating mat under batteries
   https://golvvarmebutiken.se/Elektrisk-golvvaerme/Vaermemattor/Varmamattan-Smal.htm
   https://www.granngarden.se/varmematta-nelson-garden-22-x-53-cm/p/1169741
   https://www.kivikangas.fi/varmematta-65-w-40x70-cm-med-termostat-
+  https://www.conrad.se/p/acculux-thermolux-464265-varmematta-l-x-b-x-h-50-x-30-x-04-cm-gron-561172
+
+* thermostats
+  https://www.amazon.com/Temperature-Thermostat-Regulator-Thermometer-Controller/dp/B07PSDKCK9
+  https://www.hembryggeriet.se/brewly-ac-211-digital-universaltermostat
 
 * charge breaker/fuse panel
   1. Solarregulator - 20A
@@ -23,6 +29,3 @@
 
 * box for charge/load breaker/fuse panel
   https://www.elkatalogen.se/produkter/hager-norm-1x18-moduler-gd118s-utanpaliggande.html
-
-* solarpanel support
-  1045x1690 mm
