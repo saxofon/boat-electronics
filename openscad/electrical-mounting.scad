@@ -10,18 +10,20 @@ box_wall_height= 300;
 
 module victron_smart_battery_200Ah()
 {
+    height=228;
+    
     color("lightblue")
-        cube([battery_length,battery_width,228]);
-    translate([8,45,228])
+        cube([battery_length,battery_width,height]);
+    translate([8,45,height])
         color("lightblue")
             cube([305,97,9]);
-    translate([70,8,228])
+    translate([70,8,height])
         color("lightblue")
             cube([180,37,9]);
-    translate([battery_pole_offset_x,battery_pole_offset_y,228])
+    translate([battery_pole_offset_x,battery_pole_offset_y,height])
         color("red")
             cylinder(9, d=25);
-    translate([battery_length-battery_pole_offset_x,battery_pole_offset_y,228])
+    translate([battery_length-battery_pole_offset_x,battery_pole_offset_y,height])
         color("black")
             cylinder(9, d=25);
 }
@@ -62,11 +64,55 @@ module bluesea_powerbar_600A()
         cube([180,50,50]);
 }
 
+module bluesea_breaker_panel(ampere)
+{
+    width=60;
+    length=55;
+    thickness=9;
+    
+    color("grey")
+        cylinder(h=40,d=53.5,center=false);
+    translate([-width/2,-length/2,0])
+        color("grey")
+            cube([width,length,thickness],center=false);
+    translate([0,-17,0])
+        rotate([0,0,45])
+            color("grey")
+                cube([42,42,thickness],center=false);
+    translate([0,-43,0])
+        rotate([0,0,45])
+            color("grey")
+                cube([42,42,thickness],center=false);
+    translate([15,-0,40])
+        color("silver")
+            cylinder(h=15,d=8,center=false);
+    translate([-15,-0,40])
+        color("silver")
+            cylinder(h=15,d=8,center=false);
+}
+
+module bluesea_connector_throughpanel(color)
+{
+    thickness=8;
+    length=50;
+    width=31.5;
+    height=30;
+    color(color)
+        cylinder(h=height,d1=23,d2=20.5,center=false);
+    translate([-width/2,-length/2,0])
+        color(color)
+            cube([width,length,thickness],center=false);
+    translate([0,0,-25])
+        color("silver")
+            cylinder(h=80,d=9,center=false);
+}
+
 module connector_short()
 {
     color("silver")
         cube([battery_pole_offset_y*2+15*2+battery_spacing,30,5]);
 }
+
 module connector_long()
 {
     color("silver")
@@ -119,27 +165,49 @@ module box_shortside()
         cube([box_wall_thickness,battery_width*2+battery_spacing*3,box_wall_height]);
 }
 
+module box_extrapanel()
+{
+    color("AntiqueWhite")
+        cube([box_wall_thickness,230,140]);
+}
+
 module box()
 {    
     translate([box_wall_thickness,box_wall_thickness,0])
         box_bottom_lid();
-    translate([0,0,box_wall_thickness])
+    translate([0,0,0])
         box_longside();
-    translate([0,battery_width*2+battery_spacing*3+box_wall_thickness,box_wall_thickness])
+    translate([0,battery_width*2+battery_spacing*3+box_wall_thickness,0])
         box_longside();
-    translate([0,box_wall_thickness,box_wall_thickness])
+    translate([0,box_wall_thickness,0])
         box_shortside();
-    translate([battery_length*2+battery_spacing*3+box_wall_thickness,box_wall_thickness,box_wall_thickness])
+    translate([battery_length*2+battery_spacing*3+box_wall_thickness,box_wall_thickness,0])
         box_shortside();
-    translate([0,0,box_wall_height+box_wall_thickness])
+    translate([0,0,box_wall_height])
         *#box_bottom_lid();
 }
 
 module battery_box()
 {
-    box();
-    translate([box_wall_thickness+battery_spacing,box_wall_thickness+battery_spacing+battery_width+battery_spacing,box_wall_thickness])
+    difference() {
+        box();
+        translate([-1,80,250])
+            cube([box_wall_thickness+2,200,51]);
+    }
+    translate([box_wall_thickness+battery_spacing,box_wall_thickness+battery_spacing+battery_width+battery_spacing,box_wall_thickness+30])
         bank_48VDC();
+    
+    translate([-60,65,160])
+        box_extrapanel();
+    translate([-68,155,180])
+        rotate([0,90,0])
+            bluesea_connector_throughpanel("black");
+    translate([-68,217,180])
+        rotate([0,90,0])
+            bluesea_connector_throughpanel("red");
+    translate([-68,185,250])
+        rotate([90,0,90])
+            bluesea_breaker_panel(200);
 }
 
 module electric_panel()
@@ -164,7 +232,7 @@ module electric_panel()
 module show_system()
 {
 battery_box();
-translate([-140,-184,-10])
+translate([-100,-30,-10])
     electric_panel();
 }
 
