@@ -4,9 +4,16 @@ battery_pole_offset_x = 51;
 battery_pole_offset_y = 27;
 
 battery_spacing = 15;
+bs_height = 200;
+bs_length = 45;
+bs_thickness = 12;
 
 box_wall_thickness = 8;
-box_wall_height= 300;
+box_wall_height = 300;
+box_bottom_thickness = 12;
+box_lid_thickness = 8;
+
+isolation = 30;
 
 module victron_smart_battery_200Ah()
 {
@@ -145,14 +152,21 @@ module bank_48VDC()
         
 }
 
-module box_bottom_lid()
+module box_bottom()
 {
     color("beige")
         cube([battery_length*2+battery_spacing*3,
               battery_width*2+battery_spacing*3,
-              box_wall_thickness]);
+              box_bottom_thickness]);
 }
 
+module box_lid()
+{
+    color("beige")
+        cube([battery_length*2+battery_spacing*3+box_wall_thickness*2,
+              battery_width*2+battery_spacing*3+box_wall_thickness*2,
+              box_lid_thickness]);
+}
 module box_longside()
 {
     color("beige")
@@ -174,7 +188,7 @@ module box_extrapanel()
 module box()
 {    
     translate([box_wall_thickness,box_wall_thickness,0])
-        box_bottom_lid();
+        box_bottom();
     translate([0,0,0])
         box_longside();
     translate([0,battery_width*2+battery_spacing*3+box_wall_thickness,0])
@@ -184,19 +198,87 @@ module box()
     translate([battery_length*2+battery_spacing*3+box_wall_thickness,box_wall_thickness,0])
         box_shortside();
     translate([0,0,box_wall_height])
-        *#box_bottom_lid();
+        *box_lid();
 }
 
+module bs_corner()
+{
+    cube([battery_spacing+bs_length, battery_spacing, bs_thickness]);
+    cube([battery_spacing, battery_spacing+bs_length, bs_thickness]);
+    translate([battery_spacing/2, battery_spacing/2, bs_thickness])
+        cylinder(d=battery_spacing, bs_height-bs_thickness*2);
+    translate([0, 0, bs_height-bs_thickness]) {
+        cube([battery_spacing+bs_length, battery_spacing, bs_thickness]);
+        cube([battery_spacing, battery_spacing+bs_length, bs_thickness]);
+    }
+}
+
+module bs_side()
+{
+    cube([battery_spacing+bs_length*2, battery_spacing, bs_thickness]);
+    translate([bs_length, 0, 0])
+        cube([battery_spacing, battery_spacing+bs_length, bs_thickness]);
+    translate([bs_length+battery_spacing/2, battery_spacing/2, bs_thickness])
+        cylinder(d=battery_spacing, bs_height-bs_thickness*2);
+    translate([0, 0, bs_height-bs_thickness]) {
+        cube([battery_spacing+bs_length*2, battery_spacing, bs_thickness]);
+        translate([bs_length, 0, 0])
+            cube([battery_spacing, battery_spacing+bs_length, bs_thickness]);
+    }
+}
+
+module bs_middle()
+{
+    cube([battery_spacing+bs_length*2, battery_spacing, bs_thickness]);
+    translate([bs_length, -bs_length, 0])
+        cube([battery_spacing, battery_spacing+bs_length*2, bs_thickness]);
+    translate([bs_length+battery_spacing/2, battery_spacing/2, bs_thickness])
+        cylinder(d=battery_spacing, bs_height-bs_thickness*2);
+    translate([0, 0, bs_height-bs_thickness]) {
+        cube([battery_spacing+bs_length*2, battery_spacing, bs_thickness]);
+        translate([bs_length, -bs_length, 0])
+            cube([battery_spacing, battery_spacing+bs_length*2, bs_thickness]);
+    }
+}
 module battery_box()
 {
+    color("silver")
+        translate([box_wall_thickness, box_wall_thickness,box_bottom_thickness])
+            cube([battery_length*2+battery_spacing*3, battery_width*2+battery_spacing*3,
+                    isolation]);
+    
     difference() {
         box();
         translate([-1,80,250])
             cube([box_wall_thickness+2,200,51]);
     }
-    translate([box_wall_thickness+battery_spacing,box_wall_thickness+battery_spacing+battery_width+battery_spacing,box_wall_thickness+30])
+    translate([box_wall_thickness+battery_spacing,box_wall_thickness+battery_spacing+battery_width+battery_spacing,box_bottom_thickness+isolation])
         bank_48VDC();
     
+    translate([box_wall_thickness, box_wall_thickness,box_bottom_thickness+isolation])
+        bs_corner();
+    translate([box_wall_thickness, box_wall_thickness+battery_width*2+battery_spacing*3,box_bottom_thickness+isolation])
+        rotate([0,0,270])
+            bs_corner();
+    translate([box_wall_thickness+battery_length*2+battery_spacing*3, box_wall_thickness+battery_width*2+battery_spacing*3,box_bottom_thickness+isolation])
+        rotate([0,0,180])
+            bs_corner();
+    translate([box_wall_thickness+battery_length*2+battery_spacing*3, box_wall_thickness,box_bottom_thickness+isolation])
+        rotate([0,0,90])
+            bs_corner();
+    translate([box_wall_thickness+battery_length+battery_spacing-bs_length, box_wall_thickness,box_bottom_thickness+isolation])
+        bs_side();
+    translate([box_wall_thickness, box_wall_thickness+battery_width+battery_spacing*2+bs_length,box_bottom_thickness+isolation])
+        rotate([0,0,270])
+            bs_side();
+    translate([box_wall_thickness+battery_length+battery_spacing*2+bs_length, box_wall_thickness+battery_width*2+battery_spacing*3,box_bottom_thickness+isolation])
+        rotate([0,0,180])
+            bs_side();
+    translate([box_wall_thickness+battery_length*2+battery_spacing*3, box_wall_thickness+battery_width+battery_spacing-bs_length,box_bottom_thickness+isolation])
+        rotate([0,0,90])
+            bs_side();
+    translate([box_wall_thickness+battery_length+battery_spacing-bs_length, box_wall_thickness+battery_width+battery_spacing,box_bottom_thickness+isolation])
+        bs_middle();
     translate([-60,65,160])
         box_extrapanel();
     translate([-68,155,180])
@@ -244,6 +326,5 @@ module print_dimensions()
     echo("Connector short LxW", battery_pole_offset_y*2+15*2+battery_spacing, 30);
     echo("Connector long LxW", battery_pole_offset_x*2+15*2+battery_spacing, 30);
 }
-
 show_system();
 print_dimensions();
