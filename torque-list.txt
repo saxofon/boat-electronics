@@ -1,0 +1,5 @@
+Victron Smart LiFePO4 200Ah : 40Nm
+
+Victron MultiPlusII         : 12Nm
+
+Victron Smart shunt         : ?
